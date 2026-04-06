@@ -22,7 +22,7 @@ export default function Home() {
 
     return (
         <Container className="mt-4">
-            <h2 className="mb-4">Explorar Trabajos Disponibles</h2>
+            <h2 className="mb-4">Trabajos Disponibles</h2>
             {/* Pasamos mostrarAcciones={false} para que no haya botones */}
             <ListaOfertas listaOfertas={listaOfertas} mostrarAcciones={false} />
         </Container>
