@@ -1,12 +1,11 @@
-// src/componentes/NavbarPrincipal.jsx
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexto/AuthContexto'; // <-- Importamos el hook
+import { useAuth } from '../contexto/AuthContexto';
 
 export default function NavbarPrincipal() {
     const ubicacion = useLocation();
     const navegar = useNavigate();
-    const { usuario, cerrarSesion } = useAuth(); // <-- Obtenemos el usuario actual
+    const { usuario, cerrarSesion } = useAuth();
 
     const manejarCierreSesion = async () => {
         await cerrarSesion();
@@ -14,35 +13,60 @@ export default function NavbarPrincipal() {
     };
 
     return (
-        <Navbar bg="dark" variant="dark" expand="lg" className="mb-4 shadow-sm">
+        <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="py-3 mb-4 border-bottom border-secondary border-opacity-25">
             <Container>
-                <Navbar.Brand as={Link} to="/" className="fw-bold text-primary">
+                <Navbar.Brand as={Link} to="/" className="fw-bold fs-3 text-primary" style={{ letterSpacing: '-1px' }}>
                     Do'it
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="navbar-principal" />
 
-                <Navbar.Collapse id="navbar-principal">
-                    <Nav className="me-auto">
-                        <Nav.Link as={Link} to="/" active={ubicacion.pathname === '/'}>
-                            Inicio
+                <Navbar.Toggle aria-controls="navbar-nav" className="border-0 shadow-none" />
+
+                <Navbar.Collapse id="navbar-nav">
+                    <Nav className="me-auto ms-lg-4">
+                        <Nav.Link
+                            as={Link}
+                            to="/"
+                            className={`fw-medium px-3 ${ubicacion.pathname === '/' ? 'text-primary' : 'text-secondary'}`}
+                        >
+                            Explorar trabajos
                         </Nav.Link>
                     </Nav>
 
-                    <Nav className="align-items-center gap-3">
+                    <Nav className="align-items-center gap-2 mt-3 mt-lg-0">
                         {usuario ? (
-                            // Qué mostrar si el usuario SÍ inició sesión
                             <>
-                                <Button as={Link} to="/perfil" variant="outline-light" size="sm">
+                                <Button
+                                    as={Link}
+                                    to="/perfil"
+                                    variant="light"
+                                    className="rounded-pill px-4 fw-medium text-secondary"
+                                >
                                     Mi Perfil
                                 </Button>
-                                <Button variant="outline-light" size="sm" onClick={manejarCierreSesion}>
+                                <Button
+                                    as={Link}
+                                    to="/publicar"
+                                    variant="primary"
+                                    className="rounded-pill px-4 fw-bold shadow-sm"
+                                >
+                                    + Publicar
+                                </Button>
+                                <Button
+                                    variant="link"
+                                    className="text-muted text-decoration-none p-0 ms-2"
+                                    onClick={manejarCierreSesion}
+                                >
                                     Salir
                                 </Button>
                             </>
                         ) : (
-                            // Qué mostrar si NO inició sesión
-                            <Button as={Link} to="/login" variant="success" size="sm">
-                                Ingresar / Registro
+                            <Button
+                                as={Link}
+                                to="/login"
+                                variant="primary"
+                                className="rounded-pill px-4 fw-bold shadow-sm"
+                            >
+                                Comenzar ahora
                             </Button>
                         )}
                     </Nav>

@@ -1,21 +1,36 @@
-/* Archivo de estilos globales para la aplicación. Aquí se pueden definir estilos base, importar fuentes, y hacer pequeños ajustes globales para mejorar la apariencia de la aplicación. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-/* 1. Importar una fuente bonita de Google Fonts*/
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-/* 2. Estilos base para toda la página */
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f8f9fa; /* Un gris muy clarito, típico de marketplaces */
-  color: #333333;
+  font-family: "Inter", sans-serif;
+  background-color: #121212 !important;
+  color: #f8f9fa !important;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* 3. Pequeños ajustes globales */
-/* Hacer que el cursor cambie al pasar sobre las tarjetas */
-.card {
-  transition: transform 0.2s ease-in-out;
+.custom-card {
+  background-color: #1e1e1e !important; 
+  border: 1px solid #333333 !important; 
+  border-radius: 1.5rem !important;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-5px); /* Pequeño efecto de elevación */
+.custom-card:hover {
+  transform: translateY(-6px);
+  border-color: #0d6efd !important; 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important; 
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 4.5em;
+}
+
+.btn {
+  padding: 0.6rem 1.5rem;
+  letter-spacing: 0.2px;
 }
