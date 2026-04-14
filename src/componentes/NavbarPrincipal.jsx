@@ -13,36 +13,37 @@ export default function NavbarPrincipal() {
     };
 
     return (
-        <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="py-3 mb-4 border-bottom border-secondary border-opacity-25">
+        < Navbar expand="lg" sticky="top" className="custom-navbar py-3 mb-4" >
             <Container>
                 <Navbar.Brand as={Link} to="/" className="fw-bold fs-3 text-primary" style={{ letterSpacing: '-1px' }}>
                     Do'it
                 </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="navbar-nav" className="border-0 shadow-none" />
+                <Navbar.Toggle aria-controls="navbar-nav" className="border-0 shadow-none" data-bs-theme="dark" />
 
                 <Navbar.Collapse id="navbar-nav">
                     <Nav className="me-auto ms-lg-4">
                         <Nav.Link
                             as={Link}
                             to="/"
-                            className={`fw-medium px-3 ${ubicacion.pathname === '/' ? 'text-primary' : 'text-secondary'}`}
+                            className={`fw-medium px-3 nav-enlace ${ubicacion.pathname === '/' ? 'activo' : ''}`}
                         >
                             Explorar trabajos
                         </Nav.Link>
                     </Nav>
 
-                    <Nav className="align-items-center gap-2 mt-3 mt-lg-0">
+                    <Nav className="align-items-center gap-3 mt-3 mt-lg-0">
                         {usuario ? (
                             <>
                                 <Button
                                     as={Link}
                                     to="/perfil"
-                                    variant="light"
-                                    className="rounded-pill px-4 fw-medium text-secondary"
+                                    variant="outline-light"
+                                    className="rounded-pill px-4 fw-medium border-opacity-25"
                                 >
                                     Mi Perfil
                                 </Button>
+
                                 <Button
                                     as={Link}
                                     to="/publicar"
@@ -51,9 +52,10 @@ export default function NavbarPrincipal() {
                                 >
                                     + Publicar
                                 </Button>
+
                                 <Button
                                     variant="link"
-                                    className="text-muted text-decoration-none p-0 ms-2"
+                                    className="text-secondary text-decoration-none p-0 ms-2 nav-enlace"
                                     onClick={manejarCierreSesion}
                                 >
                                     Salir
@@ -72,6 +74,6 @@ export default function NavbarPrincipal() {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
-        </Navbar>
+        </Navbar >
     );
 }
