@@ -2,14 +2,19 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import FormularioOferta from '../FormularioOferta';
 
-// 1. Simulamos el contexto de Autenticación
+// Para que la prueba sea 'Unitaria', no podemos depender de servicios externos.
+// Por lo tanto, interceptamos las llamadas al sistema y le devolvemos datos falsos.
+
+// 1. Mock del Contexto de Autenticación: Engañamos al componente haciéndole
+// creer que hay un usuario con sesión iniciada.
 vi.mock('../../contexto/AuthContexto', () => ({
     useAuth: () => ({
         usuario: { id: 'usuario-falso-123' }
     })
 }));
 
-// 2. Simulamos el cliente de Supabase para no hacer llamadas reales a internet
+// 2. Mock de Supabase: Evitamos que el formulario intente conectarse a internet.
+// Si el componente intenta guardar (insert), le devolvemos una respuesta simulada de éxito.
 vi.mock('../../servicios/supabaseCliente', () => ({
     supabase: {
         from: () => ({
@@ -20,31 +25,42 @@ vi.mock('../../servicios/supabaseCliente', () => ({
     }
 }));
 
+// Iniciamos la familia de pruebas para el Formulario
 describe('Prueba Unitaria - Componente FormularioOferta', () => {
 
-    // --- PU-01: Operación de Alta (Create) ---
-    it('PU-01: El formulario permite ingresar datos y capturarlos correctamente', () => {
-        // Renderizamos el componente
+    // =====================================================================
+    // CASO PU-01: OPERACIÓN DE ALTA (CREATE) Y FORMATEO
+    // =====================================================================
+    it('PU-01: El formulario permite ingresar datos, los formatea y los captura correctamente', () => {
+
+        // Dibujamos el formulario en nuestra pantalla virtual
         render(<FormularioOferta alCrearOferta={vi.fn()} />);
 
-        // 1. Buscamos los inputs por las etiquetas (Labels) que les pusimos
+        // 1. IDENTIFICACIÓN DE ELEMENTOS: Buscamos las cajas de texto en la pantalla
+        // usando las etiquetas (Labels) tal como las vería un usuario real.
         const inputTitulo = screen.getByLabelText('¿Qué necesitas?');
         const inputBarrio = screen.getByLabelText('Zona');
         const inputPresupuesto = screen.getByLabelText('Presupuesto ($)');
 
-        // 2. Simulamos que el usuario escribe en los campos
+        // 2. SIMULACIÓN DE ESCRITURA: Usamos fireEvent.change para simular 
+        // que el usuario teclea información dentro de las cajas de texto.
         fireEvent.change(inputTitulo, { target: { value: 'Arreglar persiana' } });
         fireEvent.change(inputBarrio, { target: { value: 'Godoy Cruz' } });
+
+        // Inyectamos un número sin puntos para poner a prueba nuestra lógica de la interfaz.
         fireEvent.change(inputPresupuesto, { target: { value: '15000' } });
 
-        // 3. Verificamos que los campos hayan guardado (capturado) el texto correcto
+        // 3. ASERCIONES (COMPROBACIONES): 
+        // Verificamos que el estado interno de React haya guardado los textos correctamente.
         expect(inputTitulo.value).toBe('Arreglar persiana');
         expect(inputBarrio.value).toBe('Godoy Cruz');
 
-        // El presupuesto debería tener el punto de los miles que programamos
+        // PRUEBA CLAVE DE UX: Verificamos que nuestra función de formateo de miles funcionó.
+        // El '15000' que introdujimos debe haberse convertido en '15.000'.
         expect(inputPresupuesto.value).toBe('15.000');
 
-        // Verificamos que el botón de envío exista
+        // Finalmente, verificamos que el botón de envío exista en el formulario
+        // para garantizar que el usuario pueda completar la acción.
         const botonPublicar = screen.getByRole('button', { name: /Publicar Trabajo/i });
         expect(botonPublicar).toBeInTheDocument();
     });
