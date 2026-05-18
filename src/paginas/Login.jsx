@@ -1,9 +1,9 @@
-// Página de Login que permite a los usuarios iniciar sesión o registrarse utilizando Supabase. Contiene un formulario con campos para correo electrónico y contraseña y un botón para alternar entre el modo de inicio de sesión y registro. Al enviar el formulario se conecta a Supabase para autenticar al usuario o crear una nueva cuenta y maneja los errores que puedan surgir durante el proceso.
-
 import { useState } from 'react';
 import { Container, Form, Button, Card, Alert, Tabs, Tab, Spinner } from 'react-bootstrap';
 import { supabase } from '../servicios/supabaseCliente';
 import { useNavigate } from 'react-router-dom';
+
+import { useMunicipios } from '../hooks/useMunicipios';
 
 export default function Login() {
     const [correo, setCorreo] = useState('');
@@ -15,28 +15,62 @@ export default function Login() {
         direccion: ''
     });
 
-    const [error, setError] = useState(null);
+    const [errorLogin, setErrorLogin] = useState(null);
+    const [erroresValidacion, setErroresValidacion] = useState([]);
     const [pestañaActiva, setPestañaActiva] = useState('login');
-
     const [estadoRegistro, setEstadoRegistro] = useState('inactivo');
 
     const navegar = useNavigate();
 
+    const { municipios, cargando: cargandoApi, error: errorApi } = useMunicipios();
+
+    const validarRegistro = () => {
+        const errores = [];
+        const regexLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+        const regexNumeros = /^[0-9]+$/;
+
+        if (!datosRegistro.nombre.trim() || !regexLetras.test(datosRegistro.nombre)) {
+            errores.push("El nombre debe ser real y contener solo letras.");
+        }
+        if (!datosRegistro.apellido.trim() || !regexLetras.test(datosRegistro.apellido)) {
+            errores.push("El apellido debe contener solo letras.");
+        }
+        if (!datosRegistro.telefono.trim() || !regexNumeros.test(datosRegistro.telefono) || datosRegistro.telefono.length < 8) {
+            errores.push("El teléfono debe contener solo números (mínimo 8 dígitos).");
+        }
+        if (!datosRegistro.direccion || datosRegistro.direccion === "Selecciona un municipio...") {
+            errores.push("Debes seleccionar una Zona/Ciudad válida de la lista.");
+        }
+        if (contrasena.length < 6) {
+            errores.push("La contraseña debe tener al menos 6 caracteres por seguridad.");
+        }
+
+        setErroresValidacion(errores);
+        return errores.length === 0;
+    };
+
+    const manejarCambioRegistro = (e) => {
+        setDatosRegistro({ ...datosRegistro, [e.target.id]: e.target.value });
+        setErroresValidacion([]);
+    };
+
     const manejarLogin = async (e) => {
         e.preventDefault();
-        setError(null);
+        setErrorLogin(null);
         const { error } = await supabase.auth.signInWithPassword({
             email: correo,
             password: contrasena,
         });
 
-        if (error) setError('Credenciales incorrectas o usuario no registrado.');
+        if (error) setErrorLogin('Credenciales incorrectas o usuario no registrado.');
         else navegar('/');
     };
 
     const manejarRegistro = async (e) => {
         e.preventDefault();
-        setError(null);
+
+        if (!validarRegistro()) return;
+
         setEstadoRegistro('cargando');
 
         const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -46,31 +80,21 @@ export default function Login() {
 
         if (authError) {
             setEstadoRegistro('inactivo');
-            return setError(authError.message);
+            return setErroresValidacion([authError.message]);
         }
 
         if (authData.user) {
-            const { error: perfilError } = await supabase
-                .from('perfiles')
-                .insert([
-                    {
-                        id: authData.user.id,
-                        nombre: datosRegistro.nombre,
-                        apellido: datosRegistro.apellido,
-                        telefono: datosRegistro.telefono,
-                        direccion: datosRegistro.direccion
-                    }
-                ]);
+            const { error: perfilError } = await supabase.from('perfiles').insert([{
+                id: authData.user.id,
+                ...datosRegistro
+            }]);
 
             if (perfilError) {
                 setEstadoRegistro('inactivo');
-                setError(perfilError.message);
+                setErroresValidacion(["Error al guardar perfil: " + perfilError.message]);
             } else {
                 setEstadoRegistro('exito');
-
-                setTimeout(() => {
-                    navegar('/perfil');
-                }, 2000);
+                setTimeout(() => navegar('/perfil'), 2000);
             }
         }
     };
@@ -99,19 +123,18 @@ export default function Login() {
                 <Card.Body className="p-4 p-md-5">
                     <h2 className="text-center mb-4 fw-bold text-primary">Do'it</h2>
 
-                    {error && <Alert variant="danger" className="text-center border-0 rounded-3">{error}</Alert>}
-
                     <Tabs
                         id="tabs-autenticacion"
                         activeKey={pestañaActiva}
                         onSelect={(k) => {
                             setPestañaActiva(k);
-                            setError(null);
+                            setErrorLogin(null);
+                            setErroresValidacion([]);
                         }}
                         className="mb-4 nav-fill"
                     >
-                        {/* PESTAÑA 1: INICIAR SESIÓN */}
                         <Tab eventKey="login" title="Iniciar Sesión">
+                            {errorLogin && <Alert variant="danger" className="text-center border-0 rounded-3">{errorLogin}</Alert>}
                             <Form onSubmit={manejarLogin} className="mt-4">
                                 <Form.Group className="mb-4" controlId="correoLogin">
                                     <Form.Label className="text-light fw-medium mb-2">Correo Electrónico</Form.Label>
@@ -129,31 +152,53 @@ export default function Login() {
                             </Form>
                         </Tab>
 
-                        {/* PESTAÑA 2: CREAR CUENTA */}
+                        {/* --- PESTAÑA 2: CREAR CUENTA --- */}
                         <Tab eventKey="registro" title="Crear Cuenta">
-                            <Form onSubmit={manejarRegistro} className="mt-4">
+                            {erroresValidacion.length > 0 && (
+                                <Alert variant="danger" className="border-0 rounded-3">
+                                    <h6 className="fw-bold mb-2">Corrige los siguientes errores:</h6>
+                                    <ul className="mb-0 ps-3">
+                                        {erroresValidacion.map((err, i) => <li key={i} className="small">{err}</li>)}
+                                    </ul>
+                                </Alert>
+                            )}
+
+                            <Form onSubmit={manejarRegistro} className="mt-4" noValidate>
 
                                 <div className="row mb-3">
                                     <Form.Group className="col-md-6 mb-3 mb-md-0" controlId="nombre">
                                         <Form.Label className="text-light fw-medium mb-2">Nombre</Form.Label>
-                                        <Form.Control type="text" className="custom-input" placeholder="Ej: Juan" value={datosRegistro.nombre} onChange={(e) => setDatosRegistro({ ...datosRegistro, nombre: e.target.value })} required disabled={estadoRegistro === 'cargando'} />
+                                        <Form.Control type="text" className="custom-input" placeholder="Ej: Juan" value={datosRegistro.nombre} onChange={manejarCambioRegistro} disabled={estadoRegistro === 'cargando'} />
                                     </Form.Group>
 
                                     <Form.Group className="col-md-6" controlId="apellido">
                                         <Form.Label className="text-light fw-medium mb-2">Apellido</Form.Label>
-                                        <Form.Control type="text" className="custom-input" placeholder="Ej: Pérez" value={datosRegistro.apellido} onChange={(e) => setDatosRegistro({ ...datosRegistro, apellido: e.target.value })} required disabled={estadoRegistro === 'cargando'} />
+                                        <Form.Control type="text" className="custom-input" placeholder="Ej: Pérez" value={datosRegistro.apellido} onChange={manejarCambioRegistro} disabled={estadoRegistro === 'cargando'} />
                                     </Form.Group>
                                 </div>
 
                                 <div className="row mb-3">
                                     <Form.Group className="col-md-6 mb-3 mb-md-0" controlId="telefono">
                                         <Form.Label className="text-light fw-medium mb-2">Teléfono</Form.Label>
-                                        <Form.Control type="text" className="custom-input" placeholder="Ej: 2615555555" value={datosRegistro.telefono} onChange={(e) => setDatosRegistro({ ...datosRegistro, telefono: e.target.value })} required disabled={estadoRegistro === 'cargando'} />
+                                        <Form.Control type="text" className="custom-input" placeholder="Ej: 2615555555" value={datosRegistro.telefono} onChange={manejarCambioRegistro} disabled={estadoRegistro === 'cargando'} />
                                     </Form.Group>
 
                                     <Form.Group className="col-md-6" controlId="direccion">
                                         <Form.Label className="text-light fw-medium mb-2">Zona / Ciudad</Form.Label>
-                                        <Form.Control type="text" className="custom-input" placeholder="Ej: Godoy Cruz" value={datosRegistro.direccion} onChange={(e) => setDatosRegistro({ ...datosRegistro, direccion: e.target.value })} required disabled={estadoRegistro === 'cargando'} />
+                                        {cargandoApi ? (
+                                            <div className="d-flex align-items-center form-control custom-input text-secondary">
+                                                <Spinner size="sm" className="me-2" /> Cargando...
+                                            </div>
+                                        ) : errorApi ? (
+                                            <Form.Control type="text" className="custom-input border-warning" placeholder="Escribe tu ciudad" value={datosRegistro.direccion} onChange={manejarCambioRegistro} disabled={estadoRegistro === 'cargando'} />
+                                        ) : (
+                                            <Form.Select className="custom-input" value={datosRegistro.direccion} onChange={manejarCambioRegistro} disabled={estadoRegistro === 'cargando'}>
+                                                <option value="">Selecciona un municipio...</option>
+                                                {municipios.map(mun => (
+                                                    <option key={mun.id} value={mun.nombre}>{mun.nombre}</option>
+                                                ))}
+                                            </Form.Select>
+                                        )}
                                     </Form.Group>
                                 </div>
 
@@ -162,12 +207,12 @@ export default function Login() {
 
                                 <Form.Group className="mb-3" controlId="correoRegistro">
                                     <Form.Label className="text-light fw-medium mb-2">Correo Electrónico</Form.Label>
-                                    <Form.Control type="email" className="custom-input" placeholder="Usa un correo válido" value={correo} onChange={(e) => setCorreo(e.target.value)} required disabled={estadoRegistro === 'cargando'} />
+                                    <Form.Control type="email" className="custom-input" placeholder="Usa un correo válido" value={correo} onChange={(e) => { setCorreo(e.target.value); setErroresValidacion([]); }} disabled={estadoRegistro === 'cargando'} />
                                 </Form.Group>
 
                                 <Form.Group className="mb-5" controlId="contrasenaRegistro">
                                     <Form.Label className="text-light fw-medium mb-2">Crear Contraseña</Form.Label>
-                                    <Form.Control type="password" className="custom-input" placeholder="Mínimo 6 caracteres" value={contrasena} onChange={(e) => setContrasena(e.target.value)} required minLength={6} disabled={estadoRegistro === 'cargando'} />
+                                    <Form.Control type="password" className="custom-input" placeholder="Mínimo 6 caracteres" value={contrasena} onChange={(e) => { setContrasena(e.target.value); setErroresValidacion([]); }} disabled={estadoRegistro === 'cargando'} />
                                 </Form.Group>
 
                                 <Button variant="success" type="submit" className="w-100 fw-bold rounded-pill py-3 shadow" disabled={estadoRegistro === 'cargando'}>
