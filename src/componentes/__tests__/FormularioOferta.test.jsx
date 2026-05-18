@@ -28,9 +28,7 @@ vi.mock('../../servicios/supabaseCliente', () => ({
 // Iniciamos la familia de pruebas para el Formulario
 describe('Prueba Unitaria - Componente FormularioOferta', () => {
 
-    // =====================================================================
     // CASO PU-01: OPERACIÓN DE ALTA (CREATE) Y FORMATEO
-    // =====================================================================
     it('PU-01: El formulario permite ingresar datos, los formatea y los captura correctamente', () => {
 
         // Dibujamos el formulario en nuestra pantalla virtual
@@ -46,17 +44,12 @@ describe('Prueba Unitaria - Componente FormularioOferta', () => {
         // que el usuario teclea información dentro de las cajas de texto.
         fireEvent.change(inputTitulo, { target: { value: 'Arreglar persiana' } });
         fireEvent.change(inputBarrio, { target: { value: 'Godoy Cruz' } });
-
-        // Inyectamos un número sin puntos para poner a prueba nuestra lógica de la interfaz.
         fireEvent.change(inputPresupuesto, { target: { value: '15000' } });
 
         // 3. ASERCIONES (COMPROBACIONES): 
         // Verificamos que el estado interno de React haya guardado los textos correctamente.
         expect(inputTitulo.value).toBe('Arreglar persiana');
         expect(inputBarrio.value).toBe('Godoy Cruz');
-
-        // PRUEBA CLAVE DE UX: Verificamos que nuestra función de formateo de miles funcionó.
-        // El '15000' que introdujimos debe haberse convertido en '15.000'.
         expect(inputPresupuesto.value).toBe('15.000');
 
         // Finalmente, verificamos que el botón de envío exista en el formulario

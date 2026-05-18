@@ -5,9 +5,7 @@ import ListaOfertas from '../ListaOfertas';
 // 'describe' agrupa una familia de pruebas. Es el título general de nuestro test.
 describe('Pruebas Unitarias - Componente ListaOfertas', () => {
   
-  // =====================================================================
   // CASO PU-03: EXCEPCIÓN (LISTA VACÍA)
-  // =====================================================================
   // 'it' declara un caso de prueba individual. Describe lo que "debería" pasar.
   it('PU-03: Debe mostrar un mensaje amigable si la lista de ofertas está vacía', () => {
     
@@ -22,9 +20,7 @@ describe('Pruebas Unitarias - Componente ListaOfertas', () => {
   });
 
 
-  // =====================================================================
   // CASO PU-02: LECTURA CON DATOS (READ)
-  // =====================================================================
   it('PU-02: Debe renderizar las tarjetas con los datos de las ofertas (Lectura)', () => {
     
     // MOCK DATA: Creamos datos falsos para aislar la prueba de la base de datos real.
@@ -43,9 +39,7 @@ describe('Pruebas Unitarias - Componente ListaOfertas', () => {
   });
 
 
-  // =====================================================================
   // CASO PU-04: OPERACIÓN DE BAJA (DELETE)
-  // =====================================================================
   it('PU-04: Debe capturar el ID correcto al hacer clic en el botón Borrar', () => {
     
     // vi.fn(): Creamos una función "espía" simulada. No borra nada realmente, 
