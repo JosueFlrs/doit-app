@@ -1,79 +1,117 @@
-import { Navbar, Container, Nav, Button } from 'react-bootstrap';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+// src/componentes/NavbarPrincipal.jsx
+import { useState } from 'react';
+import { Navbar, Nav, Container, Button, Modal, Spinner } from 'react-bootstrap';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexto/AuthContexto';
+import { supabase } from '../servicios/supabaseCliente';
 
 export default function NavbarPrincipal() {
-    const ubicacion = useLocation();
+    const { usuario } = useAuth();
     const navegar = useNavigate();
-    const { usuario, cerrarSesion } = useAuth();
+    const ubicacionActual = useLocation(); // Para saber en qué página estamos
+
+    const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+    const [cerrandoSesion, setCerrandoSesion] = useState(false);
+
+    const abrirModal = () => setMostrarConfirmacion(true);
+    const cerrarModal = () => setMostrarConfirmacion(false);
 
     const manejarCierreSesion = async () => {
-        await cerrarSesion();
-        navegar('/login');
+        cerrarModal();
+        setCerrandoSesion(true);
+
+        setTimeout(async () => {
+            await supabase.auth.signOut();
+            setCerrandoSesion(false);
+            navegar('/login');
+        }, 1500);
     };
 
     return (
-        < Navbar expand="lg" sticky="top" className="custom-navbar py-3 mb-4" >
-            <Container>
-                <Navbar.Brand as={Link} to="/" className="fw-bold fs-3 text-primary" style={{ letterSpacing: '-1px' }}>
-                    Do'it
-                </Navbar.Brand>
+        <>
+            {/* Agregamos navbar-moderna, py-3 para más altura y fixed="top" para que flote */}
+            <Navbar variant="dark" expand="lg" className="navbar-moderna py-3 z-3">
+                <Container>
+                    <Navbar.Brand as={Link} to="/" className="fw-bold fs-4 text-white d-flex align-items-center">
+                        <span className="text-primary me-1">Do</span>'it
+                    </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="navbar-nav" className="border-0 shadow-none" data-bs-theme="dark" />
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0 shadow-none" />
 
-                <Navbar.Collapse id="navbar-nav">
-                    <Nav className="me-auto ms-lg-4">
-                        <Nav.Link
-                            as={Link}
-                            to="/"
-                            className={`fw-medium px-3 nav-enlace ${ubicacion.pathname === '/' ? 'activo' : ''}`}
-                        >
-                            Explorar trabajos
-                        </Nav.Link>
-                    </Nav>
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="ms-auto align-items-center gap-3">
+                            {usuario ? (
+                                <>
+                                    <Nav.Link
+                                        as={Link}
+                                        to="/perfil"
+                                        className={`enlace-nav ${ubicacionActual.pathname === '/perfil' ? 'activo' : ''}`}
+                                    >
+                                        Mi Perfil
+                                    </Nav.Link>
 
-                    <Nav className="align-items-center gap-3 mt-3 mt-lg-0">
-                        {usuario ? (
-                            <>
+                                    <Button
+                                        as={Link}
+                                        to="/publicar"
+                                        className="btn-publicar rounded-pill px-4 py-2 mx-lg-2 my-2 my-lg-0"
+                                    >
+                                        + Publicar Trabajo
+                                    </Button>
+
+                                    <Button
+                                        variant="outline-light"
+                                        size="sm"
+                                        onClick={abrirModal}
+                                        className="rounded-pill px-4 py-2 border-secondary text-secondary hover-white"
+                                    >
+                                        Salir
+                                    </Button>
+                                </>
+                            ) : (
                                 <Button
                                     as={Link}
-                                    to="/perfil"
-                                    variant="outline-light"
-                                    className="rounded-pill px-4 fw-medium border-opacity-25"
-                                >
-                                    Mi Perfil
-                                </Button>
-
-                                <Button
-                                    as={Link}
-                                    to="/publicar"
+                                    to="/login"
                                     variant="primary"
-                                    className="rounded-pill px-4 fw-bold shadow-sm"
+                                    className="rounded-pill px-5 py-2 fw-bold shadow-sm"
                                 >
-                                    + Publicar
+                                    Ingresar
                                 </Button>
+                            )}
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
 
-                                <Button
-                                    variant="link"
-                                    className="text-secondary text-decoration-none p-0 ms-2 nav-enlace"
-                                    onClick={manejarCierreSesion}
-                                >
-                                    Salir
-                                </Button>
-                            </>
-                        ) : (
-                            <Button
-                                as={Link}
-                                to="/login"
-                                variant="primary"
-                                className="rounded-pill px-4 fw-bold shadow-sm"
-                            >
-                                Comenzar ahora
-                            </Button>
-                        )}
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar >
+            {/* MODAL DE CONFIRMACIÓN (Se mantiene igual) */}
+            <Modal show={mostrarConfirmacion} onHide={cerrarModal} centered contentClassName="bg-dark text-light border-secondary">
+                <Modal.Header closeButton className="border-secondary">
+                    <Modal.Title className="fw-bold">¿Cerrar sesión?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="fs-5 text-center py-4">
+                    ¿Estás seguro que deseas salir de tu cuenta en Do'it?
+                </Modal.Body>
+                <Modal.Footer className="border-secondary d-flex justify-content-center gap-2">
+                    <Button variant="secondary" onClick={cerrarModal} className="rounded-pill px-4">
+                        Cancelar
+                    </Button>
+                    <Button variant="danger" onClick={manejarCierreSesion} className="rounded-pill px-4">
+                        Sí, salir
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* PANTALLA DE DESPEDIDA (Se mantiene igual) */}
+            {cerrandoSesion && (
+                <div className="overlay-despedida animacion-fade">
+                    <div className="animacion-escala text-center">
+                        <div className="text-secondary mb-3">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                        <h2 className="text-light fw-bold">¡Hasta pronto!</h2>
+                        <p className="text-secondary fs-5">Cerrando tu sesión de forma segura...</p>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

@@ -107,3 +107,97 @@ body {
   background-color: #0d6efd !important;
   color: #ffffff !important;
 }
+
+/* Animaciones para alertas y modales */
+@keyframes aparecerEscala {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes desvanecer {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animacion-escala {
+  animation: aparecerEscala 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animacion-fade {
+  animation: desvanecer 0.3s ease-out forwards;
+}
+
+/* Pantalla de carga superpuesta para el cierre de sesión */
+.overlay-despedida {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(18, 18, 18, 0.95);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================================
+   ESTILOS NAVBAR MODERNO (GLASSMORPHISM)
+   ========================================= */
+.navbar-moderna {
+  background: rgba(18, 18, 18, 0.75) !important; /* Fondo oscuro semi-transparente */
+  backdrop-filter: blur(12px); /* El efecto de vidrio empañado */
+  -webkit-backdrop-filter: blur(12px); /* Soporte para Safari */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Borde sutil inferior */
+  transition: all 0.3s ease;
+}
+
+/* Estilo para los enlaces de texto */
+.enlace-nav {
+  position: relative;
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+/* Color brillante al pasar el mouse */
+.enlace-nav:hover, 
+.enlace-nav.activo {
+  color: #ffffff !important;
+}
+
+/* Línea animada debajo del texto al hacer hover */
+.enlace-nav::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #0d6efd; /* Azul de Bootstrap */
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.enlace-nav:hover::after,
+.enlace-nav.activo::after {
+  width: 100%;
+}
+
+/* Botón de publicar con brillo especial */
+.btn-publicar {
+  background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+  border: none;
+  color: white !important;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-publicar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+}
