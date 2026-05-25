@@ -8,7 +8,7 @@ import { supabase } from '../servicios/supabaseCliente';
 export default function NavbarPrincipal() {
     const { usuario } = useAuth();
     const navegar = useNavigate();
-    const ubicacionActual = useLocation(); // Para saber en qué página estamos
+    const ubicacionActual = useLocation(); 
 
     const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
     const [cerrandoSesion, setCerrandoSesion] = useState(false);
@@ -29,7 +29,6 @@ export default function NavbarPrincipal() {
 
     return (
         <>
-            {/* Agregamos navbar-moderna, py-3 para más altura y fixed="top" para que flote */}
             <Navbar variant="dark" expand="lg" className="navbar-moderna py-3 z-3">
                 <Container>
                     <Navbar.Brand as={Link} to="/" className="fw-bold fs-4 text-white d-flex align-items-center">
@@ -82,7 +81,6 @@ export default function NavbarPrincipal() {
                 </Container>
             </Navbar>
 
-            {/* MODAL DE CONFIRMACIÓN (Se mantiene igual) */}
             <Modal show={mostrarConfirmacion} onHide={cerrarModal} centered contentClassName="bg-dark text-light border-secondary">
                 <Modal.Header closeButton className="border-secondary">
                     <Modal.Title className="fw-bold">¿Cerrar sesión?</Modal.Title>
@@ -100,7 +98,6 @@ export default function NavbarPrincipal() {
                 </Modal.Footer>
             </Modal>
 
-            {/* PANTALLA DE DESPEDIDA (Se mantiene igual) */}
             {cerrandoSesion && (
                 <div className="overlay-despedida animacion-fade">
                     <div className="animacion-escala text-center">
