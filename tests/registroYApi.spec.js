@@ -45,7 +45,7 @@ test.describe('Pruebas E2E - Formulario de Registro e Integración de API', () =
         const selectZonas = page.locator('select#direccion');
 
         // 3. ASERCIÓN CLAVE: Verificamos que el select tenga cargadas las opciones de la API.
-        
+        await page.waitForTimeout(3000);
         const cantidadOpciones = await selectZonas.locator('option').count();
         expect(cantidadOpciones).toBeGreaterThan(1);
 
