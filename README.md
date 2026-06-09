@@ -1,16 +1,32 @@
-# React + Vite
+# Do'it - Plataforma de Servicios
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción del Sistema
+Do'it es una plataforma web (Producto Mínimo Viable) diseñada para conectar a usuarios que necesitan resolver tareas cotidianas o trabajos de oficios con personas dispuestas a realizarlas. El sistema permite la publicación de presupuestos, validación de zonas geográficas mediante APIs gubernamentales y un entorno seguro de autenticación.
 
-Currently, two official plugins are available:
+## Integrantes del Grupo
+* Hassan El Hadad
+* Josué Flores
+* David Copa
+* Santiago Molina
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologías Utilizadas
+* **Frontend:** React, Vite, React Router DOM.
+* **Estilos y UI:** Bootstrap, CSS Modules.
+* **Backend as a Service (BaaS):** Supabase (Autenticación y Base de Datos PostgreSQL).
+* **Integraciones Externas:** API GeoRef Argentina (Consumo mediante Axios y Custom Hooks).
+* **Testing:** Vitest (Pruebas Unitarias), Playwright (Pruebas Funcionales E2E).
 
-## React Compiler
+## Instrucciones de Instalación y Ejecución
+1. Clonar el repositorio: `git clone https://github.com/josueflrs/doit-app.git`
+2. Navegar al directorio: `cd doit-app`
+3. Instalar dependencias: `npm install`
+4. Levantar el servidor de desarrollo: `npm run dev`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Estructura Principal del Proyecto
+* `src/componentes/`: Componentes reutilizables de React (Navbar, Formularios, Listas, Rutas Privadas).
+* `src/contexto/`: Manejo del estado global (AuthContexto).
+* `src/hooks/`: Lógica de consumo de APIs externas (useMunicipios).
+* `src/paginas/`: Vistas principales de la aplicación (Home, Login, Perfil).
+* `src/servicios/`: Configuración del cliente de Supabase.
+* `src/componentes/__tests__/`: Archivos de pruebas unitarias (Vitest).
+* `tests/`: Archivos de pruebas funcionales automatizadas (Playwright).
