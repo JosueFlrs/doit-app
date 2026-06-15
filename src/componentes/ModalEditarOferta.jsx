@@ -43,7 +43,7 @@ export default function ModalEditarOferta({ mostrar, alCerrar, ofertaAEditar, al
                 precioSugerido: precioNumerico
             });
             setEstadoEnvio('exito');
-
+            
             setTimeout(() => {
                 alCerrar();
             }, 1500);
@@ -82,7 +82,7 @@ export default function ModalEditarOferta({ mostrar, alCerrar, ofertaAEditar, al
 
                         <div className="row mb-2">
                             <Form.Group className="col-md-6 mb-4 mb-md-0" controlId="barrioZona">
-                                <Form.Label className="text-secondary small fw-medium mb-1">Barrio / Zona</Form.Label>
+                                <Form.Label className="text-secondary small fw-medium mb-1">Localidad / Zona</Form.Label>
                                 <Form.Control type="text" className="custom-input" value={ofertaEditada.barrioZona} onChange={manejarCambio} required disabled={estadoEnvio === 'cargando'} />
                             </Form.Group>
 

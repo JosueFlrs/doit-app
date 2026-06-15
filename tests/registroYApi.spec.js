@@ -10,23 +10,31 @@ test.describe('Pruebas E2E - Formulario de Registro e Integración de API', () =
 
         // 2. Hacemos clic en la pestaña "Crear Cuenta" para cambiar de formulario
         await page.getByRole('tab', { name: /crear cuenta/i }).click();
+        await page.waitForTimeout(1000);
 
         // 3. Inyectamos "datos basura" inválidos en las cajas de texto
         await page.getByPlaceholder('Ej: Juan').fill('Juan123');
+        await page.waitForTimeout(1000);
         await page.getByPlaceholder('Ej: Pérez').fill('Pérez');
+        await page.waitForTimeout(1000);
         await page.getByPlaceholder('Ej: 2615555555').fill('telefonoConLetras');
+        await page.waitForTimeout(1000);
 
         // 4. Intentamos enviar el formulario haciendo clic en el botón de registro
         await page.getByRole('button', { name: "Registrarme en Do'it" }).click();
+        await page.waitForTimeout(1000);
 
         // 5. ASERCIONES: 
         // Comprobamos que aparezca la alerta roja con los mensajes de corrección
         const cajaAlertas = page.getByText(/corrige los siguientes errores/i);
         await expect(cajaAlertas).toBeVisible();
+        await page.waitForTimeout(1000);
 
         // Verificamos que el sistema muestre los errores específicos en la lista
         await expect(page.getByText('El nombre debe ser real y contener solo letras.')).toBeVisible();
+        await page.waitForTimeout(1000);
         await expect(page.getByText('El teléfono debe contener solo números')).toBeVisible();
+        await page.waitForTimeout(1000);
 
         // Verificamos que el usuario NO haya sido registrado ni redirigido (sigue en /login)
         await expect(page).toHaveURL(/.*login/);
@@ -40,6 +48,7 @@ test.describe('Pruebas E2E - Formulario de Registro e Integración de API', () =
         // 1. Vamos al login y entramos a la pestaña de registro
         await page.goto('http://localhost:5173/login');
         await page.getByRole('tab', { name: /crear cuenta/i }).click();
+        await page.waitForTimeout(1000);
 
         // 2. Buscamos el elemento <select> por su etiqueta/ID
         const selectZonas = page.locator('select#direccion');

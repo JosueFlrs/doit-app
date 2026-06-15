@@ -8,8 +8,8 @@ body {
 }
 
 .custom-card {
-  background-color: #1e1e1e !important; 
-  border: 1px solid #333333 !important; 
+  background-color: #1e1e1e !important;
+  border: 1px solid #333333 !important;
   border-radius: 1.5rem !important;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -17,8 +17,8 @@ body {
 
 .custom-card:hover {
   transform: translateY(-6px);
-  border-color: #0d6efd !important; 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important; 
+  border-color: #0d6efd !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
 }
 
 .line-clamp {
@@ -35,37 +35,36 @@ body {
   letter-spacing: 0.2px;
 }
 
-
 .custom-navbar {
-  background-color: rgba(18, 18, 18, 0.85) !important; 
+  background-color: rgba(18, 18, 18, 0.85) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-} 
+}
 
 .nav-enlace {
   color: rgba(255, 255, 255, 0.65) !important;
   transition: color 0.2s ease;
 }
 
-.nav-enlace:hover, .nav-enlace.activo {
+.nav-enlace:hover,
+.nav-enlace.activo {
   color: #ffffff !important;
 }
-
 
 .custom-input {
   background-color: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
-  border-radius: 0.75rem !important; 
+  border-radius: 0.75rem !important;
   padding: 0.8rem 1.2rem !important;
   transition: all 0.2s ease-in-out;
 }
 
 .custom-input:focus {
   background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: #0d6efd !important; 
-  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15) !important; 
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15) !important;
 }
 
 .custom-input::placeholder {
@@ -73,9 +72,17 @@ body {
 }
 
 @keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .animacion-exito {
@@ -98,8 +105,8 @@ body {
 }
 
 .custom-input option {
-  background-color: #1e1e1e !important; 
-  color: #ffffff !important; 
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
 }
 
 .custom-input option:checked,
@@ -109,17 +116,28 @@ body {
 }
 
 @keyframes aparecerEscala {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes desvanecer {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .animacion-escala {
-  animation: aparecerEscala 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: aparecerEscala 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    forwards;
 }
 
 .animacion-fade {
@@ -141,8 +159,8 @@ body {
 }
 
 .navbar-moderna {
-  background: rgba(18, 18, 18, 0.75) !important; 
-  backdrop-filter: blur(12px); 
+  background: rgba(18, 18, 18, 0.75) !important;
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
@@ -157,13 +175,13 @@ body {
   transition: color 0.3s ease;
 }
 
-.enlace-nav:hover, 
+.enlace-nav:hover,
 .enlace-nav.activo {
   color: #ffffff !important;
 }
 
 .enlace-nav::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;
@@ -185,10 +203,61 @@ body {
   border: none;
   color: white !important;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-publicar:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+}
+
+.tarjeta-moderna {
+  background: rgba(30, 30, 30, 0.6) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.tarjeta-moderna:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(13, 110, 253, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.precio-destacado {
+  background: rgba(13, 110, 253, 0.15);
+  color: #6ea8fe;
+  border: 1px solid rgba(13, 110, 253, 0.3);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.etiqueta-ubicacion {
+  background: rgba(255, 255, 255, 0.05);
+  color: #adb5bd;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Efecto para ocultar texto extra y mantener la tarjeta simétrica */
+.texto-truncado {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

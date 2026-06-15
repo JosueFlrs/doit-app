@@ -1,55 +1,73 @@
-// Componente para mostrar la lista de ofertas publicadas, utilizando tarjetas de Bootstrap. Cada oferta muestra su título, precio sugerido, ubicación y descripción detallada.
+// src/componentes/ListaOfertas.jsx
+import { Card, Button } from 'react-bootstrap';
 
-import { Card, Row, Col, Badge, Button } from 'react-bootstrap';
+export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar, alEditar }) {
 
-export default function ListaOfertas({ listaOfertas, alEliminar, alEditar, mostrarAcciones }) {
-    if (listaOfertas.length === 0) {
+    if (!listaOfertas || listaOfertas.length === 0) {
         return (
-            <div className="text-center py-5">
-                <h5 className="text-muted fw-normal">No encontramos ofertas en este momento.</h5>
+            <div className="text-center py-5 animacion-fade">
+                <h4 className="text-secondary fw-bold">No encontramos ofertas en este momento.</h4>
+                <p className="text-muted">¡Anímate a ser el primero en publicar un trabajo!</p>
             </div>
         );
     }
 
     return (
-        <Row xs={1} md={2} className="g-4">
-            {listaOfertas.map((oferta) => (
-                <Col key={oferta.id}>
-                    <Card className="h-100 border-0 shadow-sm custom-card">
-                        <Card.Body className="p-4">
-                            <div className="d-flex justify-content-between align-items-start mb-3">
-                                <Badge bg="primary-subtle" className="text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-semibold">
-                                    ${oferta.precioSugerido.toLocaleString()}
-                                </Badge>
-                                <span className="text-muted small">📍 {oferta.barrioZona}</span>
+        <div className="row g-4 animacion-fade">
+            {listaOfertas.map((ofertaActual) => (
+                <div className="col-12 col-md-6 col-lg-4" key={ofertaActual.id}>
+                    <Card className="tarjeta-moderna h-100 text-light shadow-sm">
+                        <Card.Body className="d-flex flex-column p-4">
+
+                            {/* Encabezado: Título y Precio alineados de forma responsiva */}
+                            <div className="d-flex justify-content-between align-items-start mb-3 gap-2">
+                                <h5 className="fw-bold mb-0 text-truncate">{ofertaActual.tituloOferta}</h5>
+                                <div className="precio-destacado text-nowrap">
+                                    ${ofertaActual.precioSugerido}
+                                </div>
                             </div>
 
-                            <Card.Title className="fw-bold fs-4 mb-2">{oferta.tituloOferta}</Card.Title>
+                            {/* Etiqueta de ubicación con ícono SVG integrado */}
+                            <div className="mb-3">
+                                <span className="etiqueta-ubicacion">
+                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                                    </svg>
+                                    {ofertaActual.barrioZona}
+                                </span>
+                            </div>
 
-                            <Card.Text className="text-secondary line-clamp">
-                                {oferta.descripcionDetallada}
+                            {/* Descripción con límite de líneas para no desestructurar la tarjeta */}
+                            <Card.Text className="text-secondary flex-grow-1 texto-truncado" style={{ fontSize: '0.95rem' }}>
+                                {ofertaActual.descripcionDetallada}
                             </Card.Text>
-                        </Card.Body>
 
-                        <Card.Footer className="border-top border-secondary border-opacity-25 p-4 pt-3 d-flex justify-content-between align-items-center">
-                            {mostrarAcciones ? (
-                                <div className="d-flex gap-2 w-100">
-                                    <Button variant="outline-primary" className="rounded-pill flex-grow-1" onClick={() => alEditar(oferta)}>
+                            {/* Panel de acciones (solo visible en el dashboard del Perfil) */}
+                            {mostrarAcciones && (
+                                <div className="d-flex gap-2 mt-4 pt-3 border-top border-secondary border-opacity-25">
+                                    <Button
+                                        variant="outline-info"
+                                        size="sm"
+                                        className="w-100 rounded-pill fw-medium"
+                                        onClick={() => alEditar(ofertaActual)}
+                                    >
                                         Editar
                                     </Button>
-                                    <Button variant="outline-danger" className="rounded-pill" onClick={() => alEliminar(oferta.id)}>
+                                    <Button
+                                        variant="outline-danger"
+                                        size="sm"
+                                        className="w-100 rounded-pill fw-medium"
+                                        onClick={() => alEliminar(ofertaActual.id)}
+                                    >
                                         Borrar
                                     </Button>
                                 </div>
-                            ) : (
-                                <Button variant="dark" className="w-100 rounded-pill fw-bold py-2 shadow-sm" onClick={() => alert('Funcionalidad de postulación aún no implementada')}>
-                                    Postularse ahora
-                                </Button>
                             )}
-                        </Card.Footer>
+
+                        </Card.Body>
                     </Card>
-                </Col>
+                </div>
             ))}
-        </Row>
+        </div>
     );
 }
