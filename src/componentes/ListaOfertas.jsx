@@ -1,7 +1,8 @@
-// src/componentes/ListaOfertas.jsx
+// Componente para mostrar la lista de ofertas tanto en el Home (sin acciones) como en el Perfil (con acciones de editar y eliminar). Recibe la lista de ofertas desde el componente padre, un booleano para mostrar u ocultar los botones de acción, y funciones para manejar la edición, eliminación y postulación.
+
 import { Card, Button } from 'react-bootstrap';
 
-export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar, alEditar }) {
+export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar, alEditar, alPostularse }) {
 
     if (!listaOfertas || listaOfertas.length === 0) {
         return (
@@ -18,8 +19,6 @@ export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar
                 <div className="col-12 col-md-6 col-lg-4" key={ofertaActual.id}>
                     <Card className="tarjeta-moderna h-100 text-light shadow-sm">
                         <Card.Body className="d-flex flex-column p-4">
-
-                            {/* Encabezado: Título y Precio alineados de forma responsiva */}
                             <div className="d-flex justify-content-between align-items-start mb-3 gap-2">
                                 <h5 className="fw-bold mb-0 text-truncate">{ofertaActual.tituloOferta}</h5>
                                 <div className="precio-destacado text-nowrap">
@@ -27,7 +26,6 @@ export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar
                                 </div>
                             </div>
 
-                            {/* Etiqueta de ubicación con ícono SVG integrado */}
                             <div className="mb-3">
                                 <span className="etiqueta-ubicacion">
                                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
@@ -37,12 +35,20 @@ export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar
                                 </span>
                             </div>
 
-                            {/* Descripción con límite de líneas para no desestructurar la tarjeta */}
                             <Card.Text className="text-secondary flex-grow-1 texto-truncado" style={{ fontSize: '0.95rem' }}>
                                 {ofertaActual.descripcionDetallada}
                             </Card.Text>
 
-                            {/* Panel de acciones (solo visible en el dashboard del Perfil) */}
+                            {!mostrarAcciones && (
+                                <Button
+                                    variant="primary"
+                                    className="w-100 rounded-pill fw-bold py-2 mt-3 shadow-sm"
+                                    onClick={() => alPostularse(ofertaActual)}
+                                >
+                                    Postularse
+                                </Button>
+                            )}
+
                             {mostrarAcciones && (
                                 <div className="d-flex gap-2 mt-4 pt-3 border-top border-secondary border-opacity-25">
                                     <Button
@@ -63,7 +69,6 @@ export default function ListaOfertas({ listaOfertas, mostrarAcciones, alEliminar
                                     </Button>
                                 </div>
                             )}
-
                         </Card.Body>
                     </Card>
                 </div>

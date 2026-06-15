@@ -4,9 +4,12 @@ import { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { supabase } from '../servicios/supabaseCliente';
 import ListaOfertas from '../componentes/ListaOfertas';
+import ModalPostularse from '../componentes/ModalPostularse';
 
 export default function Home() {
     const [listaOfertas, setListaOfertas] = useState([]);
+    const [ofertaSeleccionada, setOfertaSeleccionada] = useState(null);
+    const [mostrarModal, setMostrarModal] = useState(false);
 
     useEffect(() => {
         obtenerOfertas();
@@ -20,11 +23,25 @@ export default function Home() {
         if (data) setListaOfertas(data);
     };
 
+    const abrirPostulacion = (oferta) => {
+        setOfertaSeleccionada(oferta);
+        setMostrarModal(true);
+    };
+
+    const cerrarPostulacion = () => {
+        setOfertaSeleccionada(null);
+        setMostrarModal(false);
+    };
+
     return (
         <Container className="mt-4">
             <h2 className="mb-4">Trabajos Disponibles</h2>
-            {/* Pasamos mostrarAcciones={false} para que no haya botones */}
-            <ListaOfertas listaOfertas={listaOfertas} mostrarAcciones={false} />
+            <ListaOfertas listaOfertas={listaOfertas} mostrarAcciones={false} alPostularse={abrirPostulacion} />
+            <ModalPostularse
+                oferta={ofertaSeleccionada}
+                mostrar={mostrarModal}
+                alCerrar={cerrarPostulacion}
+            />
         </Container>
     );
 }
