@@ -1,4 +1,4 @@
-// Archivo principal de la aplicación React. Configura el enrutamiento utilizando React Router para mostrar diferentes componentes según la URL. Incluye un Navbar que se muestra en todas las páginas y define rutas para la página de inicio (Home) y la página de publicación (Publicar).
+// Archivo principal de la aplicación React. Configura el enrutamiento utilizando React Router para mostrar diferentes componentes según la URL. Incluye un Navbar que se muestra en todas las páginas y define rutas para la página de inicio (Home) y la página de publicación.
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexto/AuthContexto';
